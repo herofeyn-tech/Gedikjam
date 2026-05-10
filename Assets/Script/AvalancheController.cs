@@ -3,44 +3,37 @@ using UnityEngine.SceneManagement;
 
 public class AvalancheController : MonoBehaviour
 {
-    public Transform kamyon; // Inspector'dan týrýný buraya sürükle
-    public float temelHiz = 12f;
-    public float yakalamaMesafesi = 30f;
+    public Transform kamyon;
+    public float temelHiz = 15f; // Týrýn hýzýndan biraz daha yüksek tut
+    public float maxHiz = 25f;   // Uzaktayken yetiþme hýzý
 
     void Update()
     {
         if (kamyon == null) return;
 
-        // 1. HIZ HESABI
-        float suAnkiHiz = temelHiz;
         float mesafe = Vector3.Distance(transform.position, kamyon.position);
 
-        // Oyuncu çok açýlýrsa çýð "hadi lan yakalayayým" diyip hýzlanýr
-        if (mesafe > yakalamaMesafesi)
-        {
-            suAnkiHiz += 4f;
-        }
+        // Hýz ayarý: Eðer çok uzaktaysa hýzlý gelsin, 
+        // Yakýndaysa yavaþlamasýn, en az 'temelHiz' ile devam etsin.
+        float suAnkiHiz = (mesafe > 30f) ? maxHiz : temelHiz;
 
-        // 2. HEDEFE KÝLÝTLENME (Mýknatýs Mantýðý)
-        // Kamyonun olduðu yöne doðru bir yön vektörü oluþturuyoruz
-        Vector3 yon = (kamyon.position - transform.position).normalized;
+        // Yön hesabý (Sadece Yatayda - Z ve X ekseninde)
+        Vector3 hedefPos = new Vector3(kamyon.position.x, transform.position.y, kamyon.position.z);
+        Vector3 yon = (hedefPos - transform.position).normalized;
 
-        // Çýðýn havaya uçmamasý veya yere girmemesi için Y (yükseklik) farkýný siliyoruz
-        yon.y = 0;
-
-        // Çýðý her karede direkt senin olduðun yöne doðru itiyoruz
+        // HAREKET: Ýçinden geçmesi için direkt pozisyonu güncelliyoruz
         transform.position += yon * suAnkiHiz * Time.deltaTime;
 
-        // 3. GÖRSEL DÜZELTME
-        // Çýðýn sana "bakmasýný" saðlar, böylece yan yan gelmez, yüzü sana dönük olur
-        transform.LookAt(new Vector3(kamyon.position.x, transform.position.y, kamyon.position.z));
+        // Çýðýn týrýn yönüne bakmasý
+        transform.LookAt(hedefPos);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Kamyonun Tag'inin "Player" olduðundan %100 emin ol
+        // Kamyonun Tag'i "Player" olmalý
         if (other.CompareTag("Player"))
         {
+            Debug.Log("ÇIÐ YAKALADI!");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
