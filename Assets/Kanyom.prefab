@@ -9,6 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6882113977352417132}
+  - component: {fileID: 1094135254096450458}
+  - component: {fileID: 4580044686489651228}
+  - component: {fileID: 2866825392611884961}
+  - component: {fileID: 2615704773301650524}
   m_Layer: 0
   m_Name: Kanyom
   m_TagString: Untagged
@@ -39,8 +43,90 @@ Transform:
   - {fileID: 6555253032859948933}
   - {fileID: 8964532766650508986}
   - {fileID: 6224999821007552388}
+  - {fileID: 2932963595804907831}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1094135254096450458
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699005554031384139}
+  serializedVersion: 5
+  m_Mass: 1500
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &4580044686489651228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699005554031384139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ddc59b7ba70ad2448aa6b2a2bcdc026, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TruckController
+  rb: {fileID: 1094135254096450458}
+  steeringWheel: {fileID: 2030591510957763988}
+  centerOfMassObject: {fileID: 2932963595804907831}
+  steeringSmoothness: 2
+--- !u!65 &2866825392611884961
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699005554031384139}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5.4405813, y: 1.7147968, z: 2.2842407}
+  m_Center: {x: 1.0591111, y: 0.9879459, z: 5.733968}
+--- !u!114 &2615704773301650524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699005554031384139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3c7d0e7130f3af43931f3e5806852aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KamyonHareket
+  rb: {fileID: 1094135254096450458}
+  driverCamera: {fileID: 5250718778771637346}
+  moveSpeed: 10
+  acceleration: 15
+  rotationSpeed: 2
 --- !u!1 &874189768270261652
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,6 +158,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6882113977352417132}
   m_LocalEulerAnglesHint: {x: 25.56, y: -178.249, z: 0.618}
+--- !u!1 &1603999351446743031
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2932963595804907831}
+  m_Layer: 0
+  m_Name: COM_Helper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2932963595804907831
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603999351446743031}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.286, y: 0.205, z: 5.68}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6882113977352417132}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1867147922075010226
 GameObject:
   m_ObjectHideFlags: 0
@@ -1184,6 +1301,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5607450988962527012}
   m_SourcePrefab: {fileID: 100100000, guid: 0d43cefedb9b2f84798cb7dbb0dc51d7, type: 3}
+--- !u!4 &2030591510957763988 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8828307087798737873, guid: 0d43cefedb9b2f84798cb7dbb0dc51d7, type: 3}
+  m_PrefabInstance: {fileID: 7397847099674539589}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6998831043259945390 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0d43cefedb9b2f84798cb7dbb0dc51d7, type: 3}
