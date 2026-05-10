@@ -2,31 +2,41 @@ using UnityEngine;
 
 public class TruckController : MonoBehaviour
 {
+    [Header("Referanslar")]
     public Rigidbody rb;
+    public Transform steeringWheel; // Buraya pTorus1 objesini sÃ¼rÃ¼kle
+    public Transform centerOfMassObject; // Buraya COM_Helper objesini sÃ¼rÃ¼kle
 
-    [Header("Movement Settings")]
-    public float downhillForce = 500f; // Sürekli ileri (5v)
-    public float brakeForce = 300f;    // Frenleme gücü (3v)
-    public float turnSpeed = 100f;     // Dönüþ hýzý
+    [Header("GÃ¶rsel Ayarlar")]
+    public float steeringSmoothness = 5f;
 
-    void FixedUpdate()
+    private float steerInput;
+    private float visualWheelRotation;
+
+    void Start()
     {
-        // 1. DAÝMA ÝLERÝ (Downhill Momentum)
-        // Yerçekimi ve yokuþ etkisiyle araç sürekli ileri itilir
-        rb.AddForce(transform.forward * downhillForce);
+        if (rb == null) rb = GetComponent<Rigidbody>();
+        
+        // AÄŸÄ±rlÄ±k merkezini COM_Helper'Ä±n olduÄŸu yerde sabitliyoruz
+        if (centerOfMassObject != null)
+            rb.centerOfMass = centerOfMassObject.localPosition;
+    }
 
-        // 2. FRENLEME (Sadece yavaþlatýr, durdurmaz)
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.Space))
-        {
-            rb.AddForce(-transform.forward * brakeForce);
-        }
+    void Update()
+    {
+        // Sadece pTorus1'in animasyonu iÃ§in giriÅŸi alÄ±yoruz
+        steerInput = Input.GetAxis("Horizontal");
+        AnimateSteering();
+    }
 
-        // 3. DÖNÜÞ (A / D)
-        float turnInput = Input.GetAxis("Horizontal");
-        if (Mathf.Abs(turnInput) > 0.1f)
+    void AnimateSteering()
+    {
+        if (steeringWheel != null)
         {
-            // Araç hareket halindeyken daha iyi döner
-            transform.Rotate(Vector3.up * turnInput * turnSpeed * Time.fixedDeltaTime);
+            // Direksiyon gÃ¶rseli giriÅŸe gÃ¶re 500 dereceye kadar yumuÅŸakÃ§a dÃ¶ner
+            float targetVisual = steerInput * 500f; 
+            visualWheelRotation = Mathf.Lerp(visualWheelRotation, targetVisual, Time.deltaTime * steeringSmoothness);
+            steeringWheel.localRotation = Quaternion.Euler(0, 0, -visualWheelRotation);
         }
     }
 }
