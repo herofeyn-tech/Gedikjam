@@ -16,7 +16,7 @@ public class TruckController : MonoBehaviour
     void Start()
     {
         if (rb == null) rb = GetComponent<Rigidbody>();
-        
+
         // Ağırlık merkezini COM_Helper'ın olduğu yerde sabitliyoruz
         if (centerOfMassObject != null)
             rb.centerOfMass = centerOfMassObject.localPosition;
@@ -34,7 +34,7 @@ public class TruckController : MonoBehaviour
         if (steeringWheel != null)
         {
             // Direksiyon görseli girişe göre 500 dereceye kadar yumuşakça döner
-            float targetVisual = steerInput * 500f; 
+            float targetVisual = steerInput * 500f;
             visualWheelRotation = Mathf.Lerp(visualWheelRotation, targetVisual, Time.deltaTime * steeringSmoothness);
             steeringWheel.localRotation = Quaternion.Euler(0, 0, -visualWheelRotation);
         }

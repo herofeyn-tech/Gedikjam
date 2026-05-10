@@ -1,40 +1,59 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class AvalancheController : MonoBehaviour
+public class NewAvalancheController : MonoBehaviour
 {
-    public Transform kamyon;
-    public float temelHiz = 15f; // Týrýn hýzýndan biraz daha yüksek tut
-    public float maxHiz = 25f;   // Uzaktayken yetiþme hýzý
+    [Header("Takip Ayarlarý")]
+    public Transform hedefKamyon;
+    public float temelHiz = 18f;
+    public float yakalamaHiz = 35f;
 
-    void Update()
+    [Header("Atmosfer")]
+    public float olumSisiYogunlugu = 0.7f;
+
+    void FixedUpdate()
     {
-        if (kamyon == null) return;
+        if (hedefKamyon == null) return;
 
-        float mesafe = Vector3.Distance(transform.position, kamyon.position);
+        float mesafe = Vector3.Distance(transform.position, hedefKamyon.position);
+        float suAnkiHiz = (mesafe > 30f) ? yakalamaHiz : temelHiz;
 
-        // Hýz ayarý: Eðer çok uzaktaysa hýzlý gelsin, 
-        // Yakýndaysa yavaþlamasýn, en az 'temelHiz' ile devam etsin.
-        float suAnkiHiz = (mesafe > 30f) ? maxHiz : temelHiz;
+        Vector3 hedefPos = new Vector3(hedefKamyon.position.x, transform.position.y, hedefKamyon.position.z);
+        transform.position = Vector3.MoveTowards(transform.position, hedefPos, suAnkiHiz * Time.fixedDeltaTime);
 
-        // Yön hesabý (Sadece Yatayda - Z ve X ekseninde)
-        Vector3 hedefPos = new Vector3(kamyon.position.x, transform.position.y, kamyon.position.z);
-        Vector3 yon = (hedefPos - transform.position).normalized;
-
-        // HAREKET: Ýçinden geçmesi için direkt pozisyonu güncelliyoruz
-        transform.position += yon * suAnkiHiz * Time.deltaTime;
-
-        // Çýðýn týrýn yönüne bakmasý
-        transform.LookAt(hedefPos);
+        if (mesafe > 3f)
+        {
+            transform.LookAt(hedefPos);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Kamyonun Tag'i "Player" olmalý
-        if (other.CompareTag("Player"))
+        // 1. KONTROL: Çarptýðýmýz objenin kendisi, root'u (en üstü) veya baðlý olduðu Rigidbody "Player" mý?
+        // Bu sayede týrýn hangi parçasýna çarparsa çarpsýn ölüm tetiklenir.
+        bool oyuncuyaCarpti = other.CompareTag("Player") ||
+                             (other.attachedRigidbody != null && other.attachedRigidbody.CompareTag("Player")) ||
+                             other.transform.root.CompareTag("Player");
+
+        if (oyuncuyaCarpti)
         {
-            Debug.Log("ÇIÐ YAKALADI!");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Debug.Log("ÇIÐ YAKALADI: " + other.name); // Konsoldan kontrol etmek için
+
+            // Sisi bembeyaz yap
+            UnityEngine.RenderSettings.fogDensity = olumSisiYogunlugu;
+
+            // Sahneyi yeniden yükle
+            RestartGame();
         }
+        else
+        {
+            // Eðer bir þeye çarpýyor ama ölmüyorsan, konsolda neye çarptýðýný gör:
+            Debug.Log("Çýð bir þeye çarptý ama 'Player' etiketi bulamadý: " + other.name);
+        }
+    }
+
+    void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
